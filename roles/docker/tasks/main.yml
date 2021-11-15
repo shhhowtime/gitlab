@@ -1,0 +1,37 @@
+---
+
+- name: Remove old repository configurations for docker
+  file: 
+    name: "{{ item }}" 
+    state: absent
+  with_items:
+    - /etc/apt/sources.list.d/docker.list
+    - /usr/share/keyrings/docker-archive-keyring.gpg
+    - /etc/apt/sources.list.d/download_docker_com_linux_ubuntu.list
+
+- name: Install prerequisites
+  apt: 
+    pkg: 
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: present
+    update_cache: yes
+
+- name: Add repository for docker
+  shell: |
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+- name: Install docker package
+  apt: 
+    pkg: 
+      - docker-ce
+      - python3-pip
+    state: present
+    update_cache: yes
+
+- name: Install docker-py package for python
+  pip:
+    name: docker-py

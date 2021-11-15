@@ -13,3 +13,10 @@
   tags: registry
   roles:
     - { role: docker_registry }
+
+- hosts: all
+  strategy: free
+  gather_facts: false
+  tags: docker
+  roles:
+    - { role: docker }
