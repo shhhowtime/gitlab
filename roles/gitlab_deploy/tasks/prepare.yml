@@ -1,0 +1,41 @@
+---
+
+- name: Install docker package
+  apt: 
+    pkg: 
+      - docker.io
+      - python3-pip
+    state: present
+    update_cache: yes
+
+- name: Install docker-py package for python
+  pip:
+    name: docker-py
+
+- name: Remove standart ssh port from ssh config
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: absent
+    line: 'Port 22'
+
+- name: Setup new standard port for ssh
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    line: 'Port 2222'
+
+- name: Restart sshd service
+  service: name=sshd state=restarted
+
+- name: Create directories for gitlab
+  file: path=/opt/gitlab/{{ item }} state=directory mode=755
+  with_items:
+    - config
+    - logs
+    - data
+
+- name: Copy gitlab env file
+  template: src=templates/gitlabrc dest=/etc/gitlabrc mode=444
+
+- name: Copy gitlab configuration file
+  template: src=templates/gitlab.rb dest=/opt/gitlab/config/gitlab.rb mode=777

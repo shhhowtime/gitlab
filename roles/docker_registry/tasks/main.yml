@@ -1,0 +1,20 @@
+---
+
+- name: Create registry directory
+  file: path=/opt/docker_registry state=directory mode=644 recurse=yes
+
+- name: Create registry container
+  docker_container:
+    recreate: yes
+    name: registry
+    image: registry:2
+    restart_policy: always
+    volumes:
+      - /opt/docker_registry:/var/lib/registry/:rw
+    network_mode: host
+    log_driver: syslog
+    log_options: tag=docker/registry
+    env:
+      REGISTRY_HTTP_SECRET: '{{ registry_http_secret }}'
+      REGISTRY_STORAGE_DELETE_ENABLED: 'true'
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: '/var/lib/registry'

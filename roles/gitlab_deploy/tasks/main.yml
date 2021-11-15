@@ -1,0 +1,11 @@
+---
+
+- name: Config deployment subtask
+  include: prepare.yml
+
+- name: Gitlab container deployment subtask
+  include: gitlab.yml
+
+- name: Gitlab-runner container deployment subtask
+  include: runner.yml
+  tags: [ runner ]

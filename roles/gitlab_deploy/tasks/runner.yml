@@ -1,0 +1,29 @@
+---
+
+- name: Create directories for gitlab runner
+  file: path=/opt/gitlab-runner/{{ item }} state=directory mode=644
+  with_items:
+    - config
+    - cache
+  become: yes
+
+- name: Copy gitlab runner config
+  template:
+    src: templates/gitlab_runner_config.toml
+    dest: /opt/gitlab-runner/config/config.toml
+    mode: 0600
+  become: yes
+
+- name: Run gitlab runner container
+  docker_container:
+    name: gitlab-runner
+    image: gitlab/gitlab-runner:ubuntu-v14.2.0
+    recreate: yes
+    restart_policy: always
+    volumes:
+      - /opt/gitlab-runner/config:/etc/gitlab-runner
+      - /opt/gitlab-runner/cache:/cache
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/hosts:/etc/hosts:ro
+    log_driver: syslog
+    log_options: tag=docker/gitlab_runner

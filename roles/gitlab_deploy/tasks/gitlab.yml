@@ -1,0 +1,17 @@
+---
+
+- name: Create gitlab container
+  docker_container:
+    name: gitlab
+    image: gitlab/gitlab-ce:14.4.2-ce.0
+    hostname: 'git.fmarkov-netology.com'
+    recreate: yes
+    restart_policy: always
+    network_mode: host
+    volumes:
+      - /opt/gitlab/config:/etc/gitlab
+      - /opt/gitlab/logs:/var/log/gitlab
+      - /opt/gitlab/data:/var/opt/gitlab
+    log_driver: syslog
+    log_options: tag=docker/gitlab
+    env_file: /etc/gitlabrc

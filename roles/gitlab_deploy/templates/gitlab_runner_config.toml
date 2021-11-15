@@ -1,0 +1,26 @@
+concurrent = 8
+check_interval = 0
+
+[session_server]
+  session_timeout = 1800
+
+[[runners]]
+  name = "shared runner"
+  url = "http://git.fmarkov-netology.com/"
+  token = "odWgaUnEAsAJm7y2v4qZ"
+  executor = "docker"
+  environment = ["DOCKER_AUTH_CONFIG={\"auths\": { \"docker.fmarkov-netology.com:5000\": { \"auth\": \"YWRtaW46QWExMjM0NTY=\"}}}"]
+  [runners.custom_build_dir]
+  [runners.cache]
+    [runners.cache.s3]
+    [runners.cache.gcs]
+  [runners.docker]
+    tls_verify = false
+    host = "unix:///var/run/docker.sock"
+    image = "ubuntu:bionic"
+    privileged = true
+    disable_entrypoint_overwrite = false
+    oom_kill_disable = false
+    disable_cache = false
+    volumes = ["/cache", "/var/run/docker.sock:/var/run/docker.sock"]
+    shm_size = 0
