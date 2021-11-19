@@ -1,22 +1,22 @@
 ---
 
-- hosts: gitlab
-  strategy: free
-  gather_facts: false
-  tags: gitlab
-  roles:
-    - { role: gitlab_deploy }
-
-- hosts: gitlab
-  strategy: free
-  gather_facts: false
-  tags: registry
-  roles:
-    - { role: docker_registry }
-
 - hosts: all
   strategy: free
   gather_facts: false
   tags: docker
   roles:
     - { role: docker }
+
+- hosts: all
+  strategy: free
+  gather_facts: false
+  tags: gitlab
+  roles:
+    - { role: gitlab_deploy }
+
+- hosts: all
+  strategy: free
+  gather_facts: false
+  tags: registry
+  roles:
+    - { role: docker_registry }
