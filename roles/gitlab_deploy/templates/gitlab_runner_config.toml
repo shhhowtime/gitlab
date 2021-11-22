@@ -7,7 +7,7 @@ check_interval = 0
 [[runners]]
   name = "shared runner"
   url = "http://127.0.0.1/"
-  token = "ztYfkqvyPyxNxe3LTxrP"
+  token = "{{ gitlab_token }}"
   executor = "docker"
   environment = ["DOCKER_AUTH_CONFIG={\"auths\": { \"127.0.0.1:5000\": { \"auth\": \"Zm1hcmtvdjpreHQ4OHBwMQ==\"}}}"]
   [runners.custom_build_dir]

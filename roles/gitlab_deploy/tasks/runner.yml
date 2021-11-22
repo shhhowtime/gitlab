@@ -20,10 +20,10 @@
     image: gitlab/gitlab-runner:ubuntu-v14.2.0
     recreate: yes
     restart_policy: always
+    network: host
     volumes:
       - /opt/gitlab-runner/config:/etc/gitlab-runner
       - /opt/gitlab-runner/cache:/cache
       - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/hosts:/etc/hosts:ro
     log_driver: syslog
     log_options: tag=docker/gitlab_runner
