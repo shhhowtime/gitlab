@@ -6,10 +6,10 @@ check_interval = 0
 
 [[runners]]
   name = "shared runner"
-  url = "http://git.fmarkov-netology.com/"
-  token = "odWgaUnEAsAJm7y2v4qZ"
+  url = "http://127.0.0.1/"
+  token = "ztYfkqvyPyxNxe3LTxrP"
   executor = "docker"
-  environment = ["DOCKER_AUTH_CONFIG={\"auths\": { \"docker.fmarkov-netology.com:5000\": { \"auth\": \"YWRtaW46QWExMjM0NTY=\"}}}"]
+  environment = ["DOCKER_AUTH_CONFIG={\"auths\": { \"127.0.0.1:5000\": { \"auth\": \"Zm1hcmtvdjpreHQ4OHBwMQ==\"}}}"]
   [runners.custom_build_dir]
   [runners.cache]
     [runners.cache.s3]
