@@ -3,6 +3,20 @@
 - name: Create registry directory
   file: path=/opt/docker_registry state=directory mode=644 recurse=yes
 
+- name: Download registry configs and basic containers
+  get_url:
+    url: https://fmarkov-netology.s3.eu-central-1.amazonaws.com/registry
+    dest: /tmp/registry.tar.gz.gpg
+
+- name: Decrypt and extract configs 
+  shell: |
+        cd /tmp
+        gpg --batch --yes --passphrase {{ registry_http_secret }} \
+        -o /tmp/registry.tar.gz \
+        --decrypt /tmp/registry.tar.gz.gpg
+
+        tar -xvzf registry.tar.gz -C /
+
 - name: Create registry container
   docker_container:
     recreate: yes

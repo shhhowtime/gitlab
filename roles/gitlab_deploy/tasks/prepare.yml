@@ -27,15 +27,29 @@
 - name: Restart sshd service
   service: name=sshd state=restarted
 
-- name: Create directories for gitlab
-  file: path=/opt/gitlab/{{ item }} state=directory mode=755
-  with_items:
-    - config
-    - logs
-    - data
+- name: Download gitlab configs
+  get_url:
+    url: https://fmarkov-netology.s3.eu-central-1.amazonaws.com/gitlab
+    dest: /tmp/gitlab.tar.gz.gpg
+  
+- name: Download runner configs
+  get_url:
+    url: https://fmarkov-netology.s3.eu-central-1.amazonaws.com/runner
+    dest: /tmp/runner.tar.gz.gpg
+
+- name: Decrypt and extract configs 
+  shell: |
+        cd /tmp
+        gpg --batch --yes --passphrase {{ gitlab_root_pass }} \
+        -o /tmp/gitlab.tar.gz \
+        --decrypt /tmp/gitlab.tar.gz.gpg
+
+        gpg --batch --yes --passphrase {{ gitlab_root_pass }} \
+        -o /tmp/runner.tar.gz \
+        --decrypt /tmp/runner.tar.gz.gpg
+
+        tar -xvzf gitlab.tar.gz -C /
+        tar -xvzf runner.tar.gz -C /
 
 - name: Copy gitlab env file
   template: src=templates/gitlabrc dest=/etc/gitlabrc mode=444
-
-- name: Copy gitlab configuration file
-  template: src=templates/gitlab.rb dest=/opt/gitlab/config/gitlab.rb mode=777
